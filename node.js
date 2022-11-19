@@ -45,9 +45,6 @@ function Node({ $target, initalState, onClick, onBack }) {
             this.onClick(selectedNode);
           }
         }
-        if (!nodeId) {
-          console.log("g");
-        }
       });
     });
 

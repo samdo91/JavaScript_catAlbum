@@ -11,10 +11,10 @@ function Breadcrumb({ $target, initalState, onBackRoot }) {
   };
 
   this.render = () => {
-    this.$nav.innerHTML = `<div class ="nav-item">root</div> ${this.state
+    this.$nav.innerHTML = `<div class="nav-item">root</div> ${this.state
       .map(
         (node, index) =>
-          `<div class="nav-item" date-index="${index}">${node.name}<div>`
+          `<div class="nav-item" data-index="${index}">${node.name}<div>`
       )
       .join("")}
     `;

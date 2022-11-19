@@ -40,6 +40,7 @@ function App({ $target }) {
           nodes: rootNodes,
         });
       } catch (e) {
+        alert("onBackRoot 불러오지 못했어요");
       } finally {
         this.loadingFuntion(false);
       }
@@ -59,7 +60,6 @@ function App({ $target }) {
         if (node.type === "DIRECTORY") {
           this.state.isRoot = false;
           const nextNodes = await request(`${node.id}`);
-          console.log("nextNodes", nextNodes);
 
           this.setState({
             ...this.state,
@@ -67,13 +67,13 @@ function App({ $target }) {
             nodes: nextNodes,
           });
         } else if (node.type === "FILE") {
-          console.log("node", node);
           this.setState({
             ...this.state,
             imgstate: node.filePath,
           });
         }
       } catch (e) {
+        alert("onClick 불러오지 못했어요");
       } finally {
         this.loadingFuntion(false);
       }
@@ -106,6 +106,7 @@ function App({ $target }) {
           });
         }
       } catch (e) {
+        alert("onBack 불러오지 못했어요");
       } finally {
         this.loadingFuntion(false);
       }
@@ -124,7 +125,6 @@ function App({ $target }) {
       this.loadingFuntion(true);
 
       const rootNodes = await request();
-      console.log("rootNodes", rootNodes);
 
       this.setState({
         ...this.state,
@@ -132,7 +132,7 @@ function App({ $target }) {
         nodes: rootNodes,
       });
     } catch (e) {
-      console.log(좆망);
+      alert("apiList  불러오지 못했어요");
     } finally {
       this.loadingFuntion(false);
     }
