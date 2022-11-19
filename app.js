@@ -3,6 +3,7 @@ import Node from "./node.js";
 import { request } from "./api.js";
 import ImgPage from "./imgPage.js";
 import LoadingPage from "./loadingPage.js";
+import { loadingFuntion } from "./loadingFuntion.js";
 
 function App({ $target }) {
   this.state = {
@@ -12,16 +13,14 @@ function App({ $target }) {
     imgstate: null,
     isLoading: false,
   };
+  this.loadingFuntion = loadingFuntion;
 
   const breadcrumb = new Breadcrumb({
     $target,
     initalState: this.state.depth,
     onBackRoot: async () => {
       try {
-        this.setState({
-          ...this.state,
-          isLoading: true,
-        });
+        this.loadingFuntion(true);
         const rootNodes = await request(
           "https://l9817xtkq3.execute-api.ap-northeast-2.amazonaws.com/dev/"
         );
@@ -34,10 +33,7 @@ function App({ $target }) {
         });
       } catch (e) {
       } finally {
-        this.setState({
-          ...this.state,
-          isLoading: false,
-        });
+        this.loadingFuntion(false);
       }
     },
   });
@@ -61,10 +57,7 @@ function App({ $target }) {
     },
     onClick: async (node) => {
       try {
-        this.setState({
-          ...this.state,
-          isLoading: true,
-        });
+        this.loadingFuntion(true);
 
         if (node.type === "DIRECTORY") {
           this.state.isRoot = false;
@@ -84,20 +77,14 @@ function App({ $target }) {
             imgstate: node.filePath,
           });
         }
+      } catch (e) {
       } finally {
-        this.setState({
-          ...this.state,
-          isLoading: false,
-        });
+        this.loadingFuntion(false);
       }
     },
     onBack: async () => {
       try {
-        this.setState({
-          ...this.state,
-          isLoading: true,
-        });
-
+        this.loadingFuntion(true);
         const nextState = { ...this.state };
 
         nextState.depth.pop();
@@ -120,7 +107,6 @@ function App({ $target }) {
           const backId = await request(
             `https://l9817xtkq3.execute-api.ap-northeast-2.amazonaws.com/dev/${prevId}`
           );
-          console.log(backId);
           this.setState({
             ...nextState,
             isRoot: false,
@@ -129,10 +115,7 @@ function App({ $target }) {
         }
       } catch (e) {
       } finally {
-        this.setState({
-          ...this.state,
-          isLoading: false,
-        });
+        this.loadingFuntion(false);
       }
     },
   });
@@ -145,10 +128,7 @@ function App({ $target }) {
   });
   const apiList = async () => {
     try {
-      this.setState({
-        ...this.state,
-        isLoading: true,
-      });
+      this.loadingFuntion(true);
 
       const rootNodes = await request(
         "https://l9817xtkq3.execute-api.ap-northeast-2.amazonaws.com/dev/"
@@ -162,10 +142,7 @@ function App({ $target }) {
     } catch (e) {
       console.log(좆망);
     } finally {
-      this.setState({
-        ...this.state,
-        isLoading: false,
-      });
+      this.loadingFuntion(false);
     }
   };
   apiList();

@@ -6,7 +6,6 @@ function LoadingPage({ $target, initalState }) {
   $target.appendChild(this.$page);
 
   this.setState = (nextState) => {
-    console.log(nextState);
     this.state = nextState;
     this.render();
   };
