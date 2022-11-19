@@ -14,6 +14,16 @@ function App({ $target }) {
     isLoading: false,
   };
   this.loadingFuntion = loadingFuntion;
+  this.setState = (nextState) => {
+    this.state = nextState;
+    breadcrumb.setState(this.state.depth);
+    node.setState({
+      isRoot: this.state.isRoot,
+      nodes: this.state.nodes,
+    });
+    imgPage.setState(this.state.imgstate);
+    loadingPage.setState(this.state.isLoading);
+  };
 
   const breadcrumb = new Breadcrumb({
     $target,
@@ -21,9 +31,7 @@ function App({ $target }) {
     onBackRoot: async () => {
       try {
         this.loadingFuntion(true);
-        const rootNodes = await request(
-          "https://l9817xtkq3.execute-api.ap-northeast-2.amazonaws.com/dev/"
-        );
+        const rootNodes = await request();
 
         this.setState({
           ...this.state,
@@ -38,17 +46,6 @@ function App({ $target }) {
     },
   });
 
-  this.setState = (nextState) => {
-    this.state = nextState;
-    breadcrumb.setState(this.state.depth);
-    node.setState({
-      isRoot: this.state.isRoot,
-      nodes: this.state.nodes,
-    });
-    imgPage.setState(this.state.imgstate);
-    loadingPage.setState(this.state.isLoading);
-  };
-
   const node = new Node({
     $target,
     initalState: {
@@ -61,9 +58,8 @@ function App({ $target }) {
 
         if (node.type === "DIRECTORY") {
           this.state.isRoot = false;
-          const nextNodes = await request(
-            `https://l9817xtkq3.execute-api.ap-northeast-2.amazonaws.com/dev/${node.id}`
-          );
+          const nextNodes = await request(`${node.id}`);
+          console.log("nextNodes", nextNodes);
 
           this.setState({
             ...this.state,
@@ -95,18 +91,14 @@ function App({ $target }) {
             : nextState.depth[nextState.depth.length - 1].id;
 
         if (prevId === null) {
-          const backRoot = await request(
-            "https://l9817xtkq3.execute-api.ap-northeast-2.amazonaws.com/dev/"
-          );
+          const backRoot = await request();
           this.setState({
             ...nextState,
             isRoot: true,
             nodes: backRoot,
           });
         } else if (prevId) {
-          const backId = await request(
-            `https://l9817xtkq3.execute-api.ap-northeast-2.amazonaws.com/dev/${prevId}`
-          );
+          const backId = await request(`${prevId}`);
           this.setState({
             ...nextState,
             isRoot: false,
@@ -126,13 +118,13 @@ function App({ $target }) {
     $target,
     initalState: this.state.isLoading,
   });
+
   const apiList = async () => {
     try {
       this.loadingFuntion(true);
 
-      const rootNodes = await request(
-        "https://l9817xtkq3.execute-api.ap-northeast-2.amazonaws.com/dev/"
-      );
+      const rootNodes = await request();
+      console.log("rootNodes", rootNodes);
 
       this.setState({
         ...this.state,
@@ -146,24 +138,6 @@ function App({ $target }) {
     }
   };
   apiList();
-
-  // const getApi = async () => {
-  //   try {
-  //     const rootNodes = await request(
-  //       "https://l9817xtkq3.execute-api.ap-northeast-2.amazonaws.com/dev/"
-  //     );
-
-  //     this.setState({
-  //       ...this.state,
-  //       isRoot: true,
-  //       nodes: rootNodes,
-  //     });
-  //   } catch (err) {
-  //     console.log("없어?");
-  //   }
-  // };
-
-  // getApi();
 }
 
 export default App;
